@@ -7,14 +7,18 @@
   T:0:0001000:0   // Stop during 1sec at PWM 0
   T:2:0001000:255 // Run CCW during 1sec at PWM 255
    "S:"or hardware "SW1" // Start Tasks and Loop
-   "D:"or hardware "SW2" // Delete current Tasks
+   "D:"or hardware "SW2" // Reset Saved program
+   "C" Save data to ESP32
+   "V" Upload saved tasks
+   "P" Disply uploaded tasks
+   
   DEMO Commands
-  L:2 / L,2
-  T:1:0003000:255 / T,1,0003000,255
-  T:0:0002000:0 / T,0,0002000,0
-  T:2:0002000:255 / T,2,0002000,255
-  T:0:0001000:0 / T,0,0001000,0
-  S
+L:2 / L,2
+T:1:0003000:255 / T,1,0003000,255
+T:0:0002000:0 / T,0,0002000,0
+T:2:0002000:255 / T,2,0002000,255
+T:0:0001000:0 / T,0,0001000,0
+S
   
   ========================================== */
 #include <EEPROM.h>
