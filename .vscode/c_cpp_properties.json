@@ -15,6 +15,18 @@
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "msvc-x64"
+        },
+        {
+            "name": "Mac",
+            "includePath": [
+                "/Users/uhd/Library/Arduino15/packages/esp32/tools/**",
+                "/Users/uhd/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/**",
+                "/Users/uhd/Documents/Arduino/libraries/**",
+                "/Applications/Arduino.app/Contents/Java/libraries/**",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/**",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/variants/standard/**"
+            ],
+            "forcedInclude": []
         }
     ],
     "version": 4

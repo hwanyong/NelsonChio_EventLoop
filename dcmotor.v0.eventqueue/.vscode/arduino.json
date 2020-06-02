@@ -1,0 +1,7 @@
+{
+    "sketch": "dcmotor.v0.eventqueue.ino",
+    "port": "/dev/cu.SLAB_USBtoUART",
+    "board": "Heltec-esp32:esp32:wifi_kit_32",
+    "configuration": "PSRAM=disabled,PartitionScheme=default,CPUFreq=240,FlashMode=qio,FlashFreq=40,FlashSize=4M,UploadSpeed=921600,DebugLevel=warn",
+    "programmer": "AVR ISP"
+}

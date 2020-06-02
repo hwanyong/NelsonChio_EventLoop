@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "/Users/paradigm/Library/Arduino15/packages/Heltec-esp32/tools/**",
+                "/Users/paradigm/Library/Arduino15/packages/Heltec-esp32/hardware/esp32/0.0.2-rc1/**",
+                "/Users/paradigm/Library/Arduino15/packages/Heltec-esp32/hardware/esp32/0.0.4/**"
+            ],
+            "forcedInclude": [],
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ],
+            "intelliSenseMode": "clang-x64",
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "defines": [
+                "USBCON"
+            ]
+        }
+    ],
+    "version": 4
+}
