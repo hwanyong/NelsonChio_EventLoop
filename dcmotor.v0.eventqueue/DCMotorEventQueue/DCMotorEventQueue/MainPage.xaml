@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage Padding="15,15,15,15" xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:d="http://xamarin.com/schemas/2014/forms/design" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="DCMotorEventQueue.MainPage">
+	<StackLayout>
+		<Label x:Name="lbBTStatus" Text="bluetooth status: Not Connected" />
+		<StackLayout Orientation="Vertical">
+			<ListView x:Name="TaskList" ItemsSource="{Binding TaskList}">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<TextCell Text="{Binding rule}" />
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</StackLayout>
+		<StackLayout Orientation="Horizontal">
+			<Label Text="속도: " FontSize="Title" />
+			<Entry x:Name="etrSpeed" Placeholder="(170 ~ 255)" FontSize="Body" ReturnType="Next" TabIndex="1" />
+		</StackLayout>
+		<StackLayout Orientation="Horizontal">
+			<Label Text="방향: " FontSize="Title" />
+			<Label Text="CCW" FontSize="Body" />
+			<Switch x:Name="swRotation" IsToggled="True" TabIndex="2" />
+			<Label Text="CW" FontSize="Body" />
+		</StackLayout>
+		<StackLayout Orientation="Horizontal">
+			<Label Text="지속시간:" FontSize="Title" />
+			<Entry x:Name="etrTime" Placeholder="1,000 ms(1 sec)" FontSize="Body" TabIndex="3" />
+		</StackLayout>
+
+		<Button Text="SEND" HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Clicked="handlerSendClicked" />
+
+		<StackLayout Orientation="Horizontal">
+			<Button Text="STOP" HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Clicked="handlerStopClicked" />
+			<Button Text="START" HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Clicked="handlerStartClicked" />
+		</StackLayout>
+	</StackLayout>
+</ContentPage>
