@@ -2,7 +2,15 @@
 #include <SSD1306Wire.h>
 #include <bitset>
 
-#define TSKLEN 10
+#define TSKLEN      10
+#define CLRTSKSW    18
+#define STARTSW     5
+#define PWM1        17
+#define INA1        4
+#define INA2        16
+#define PWM1FRQ     5000
+#define PWM1CHN     0
+#define PWM1RSL     8
 
 using byte = unsigned char;
 
@@ -99,10 +107,11 @@ class TaskManagement {
 
 void setup() {
     Serial.begin(115200);
-    Serial.println(":: STANBY ::");
 }
 
 void loop() {
+    Serial.println("STANBY");
+    delay(5000);
 }
 
 #pragma region Global Functions BODY
