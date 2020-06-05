@@ -3,7 +3,16 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "D:\\Users\\LattePanda\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
+                "D:\\Users\\LattePanda\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.7.1\\**",
+                "D:\\Users\\LattePanda\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
+                "D:\\Users\\LattePanda\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.4\\**",
+                "${workspaceFolder}/**",
+                "D:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/7.3.0/include/**",
+                "D:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/**",
+                "D:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard/**",
+                "C:/Program Files (x86)/Arduino/**",
+                "D:/Program Files (x86)/Arduino/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -14,7 +23,8 @@
             "compilerPath": "D:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.25.28610/bin/Hostx64/x64/cl.exe",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "msvc-x64"
+            "intelliSenseMode": "msvc-x64",
+            "forcedInclude": []
         },
         {
             "name": "Mac",
