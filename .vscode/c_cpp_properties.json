@@ -12,7 +12,9 @@
                 "D:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/**",
                 "D:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard/**",
                 "C:/Program Files (x86)/Arduino/**",
-                "D:/Program Files (x86)/Arduino/**"
+                "D:/Program Files (x86)/Arduino/**",
+                "/Users/uhd/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/**",
+                "/Users/uhd/Library/Arduino15/packages/esp32/tools/**"
             ],
             "defines": [
                 "_DEBUG",
