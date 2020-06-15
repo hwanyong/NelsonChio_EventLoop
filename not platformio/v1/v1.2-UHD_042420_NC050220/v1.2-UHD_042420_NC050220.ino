@@ -28,6 +28,8 @@ S
 #define EEPROM_SIZE sizeof(TaskMng)
 // #define PWM1 17
 
+using byte = unsigned char;
+
 const int ClearTaskSW = 18;
 const int StartSW = 5;
 const int PWM1 = 17;
