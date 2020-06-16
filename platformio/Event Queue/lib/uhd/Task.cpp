@@ -13,6 +13,52 @@ Task::Task()
 	this->executeTime = None;
 	this->checkScale = None;
 }
+void Task::setPins() {
+	// Pin
+	for (int i = 0; this->pins.size(); i += 1) {
+		pinMode(this->pins[i], OUTPUT);
+	}
+
+	// Module
+	switch (this->taskType) {
+	case DC:
+		// ledcSetup(PWM1Channel, PWM1FREQ, PWM1RESOLUTION);
+		// ledcAttachPin(PWM1, PWM1Channel);
+	break;
+	case Stepper:	this->exeStepMotor(); break;
+	case Scale:		this->exeScale(); break;
+	}
+}
+void Task::getPinNumber(String pins[]) {
+	for (int i = 0; i < PINLEN; i += 1) {
+		if (pins[i] == id) {
+			this->pins.push_back(i);
+			pinMode(i, OUTPUT);
+			break;
+		}
+	}
+}
+void Task::exeDCMotor() {
+	switch (this->rotation)
+	{
+	case LOW:
+		digitalWrite(this->pins[0], HIGH);
+		digitalWrite(this->pins[1], LOW);
+		break;
+	case HIGH:
+		digitalWrite(this->pins[0], HIGH);
+		digitalWrite(this->pins[1], LOW);
+		break;
+	default:
+		digitalWrite(this->pins[0], LOW);
+		digitalWrite(this->pins[1], LOW);
+		break;
+	}
+	
+	ledcWrite(this->pwm, this->speed);
+}
+void Task::exeStepMotor() {}
+void Task::exeScale() {}
 void Task::add(TASKTYPE _tt, String _id, int _p, int _r, int _d, bool _c)
 {
 	this->taskType = _tt;
@@ -30,14 +76,34 @@ void Task::clear()
 	this->executeTime = None;
 	this->checkScale = None;
 }
-void Task::start() {
-	
+void Task::start(hw_timer_t *_timer, String pins[]) {
+	Serial.println("\t(activateTask)");
+
+	_timer = timerBegin(0, 80, true);							//timer 0, div 80
+	timerAttachInterrupt(_timer, &UHD::onTimer, true);			//attach callback
+	timerAlarmWrite(_timer,	this->executeTime * 1000, false);	//set time in us
+	timerAlarmEnable(_timer);									//enable interrupt
+
+	this->getPinNumber(pins);
+
+	switch (this->taskType)
+	{
+	case DC:		this->exeDCMotor(); break;
+	case Stepper:	this->exeStepMotor(); break;
+	case Scale:		this->exeScale(); break;
+	default: break;
+	}
 }
-void Task::stop() {}
+void Task::stop(hw_timer_t *_timer) {
+	Serial.println("\t(deactivateTask)");
+
+	_timer = NULL;
+}
 
 TaskManagement::TaskManagement()
 {
 	Serial.print("call TaskManagement()");
+	this->clearPins();
 	this->taskData.exeLoopCount = 0;
 	this->taskData.setLoopCount = 0;
 	this->taskData.exeTask = 0;
@@ -73,72 +139,6 @@ void TaskManagement::clearTask()
 	this->taskData.exeTask = 0;
 	this->taskData.setTask = 0;
 }
-void TaskManagement::activateTask()
-{
-	Serial.println("\t(activateTask)");
-}
-void TaskManagement::deactivateTask()
-{
-	Serial.println("\t(deactivateTask)");
-	this->timer = NULL;
-}
-void TaskManagement::startTimer()
-{
-	Serial.println("(startTimer)");
-
-	this->timer = timerBegin(0, 80, true);																  //timer 0, div 80
-	timerAttachInterrupt(this->timer, &UHD::onTimer, true);												  //attach callback
-	timerAlarmWrite(this->timer, this->taskData.tasks[this->taskData.exeTask].executeTime * 1000, false); //set time in us
-	timerAlarmEnable(this->timer);																		  //enable interrupt
-}
-void TaskManagement::startTask()
-{
-	Serial.println("\t(StartTask)");
-
-	String msg = String("\tLoop: ") + (this->taskData.exeLoopCount + 1) + String("/") + this->taskData.setLoopCount + String("\n\tTask Num: ") + (this->taskData.exeTask + 1) + String("/") + this->taskData.setTask;
-	Serial.println(msg);
-
-	this->startTimer();
-	this->activateTask();
-}
-void TaskManagement::stopTask()
-{
-	Serial.println("\t(StopTask)");
-	this->deactivateTask();
-}
-void TaskManagement::nextTask()
-{
-	Serial.println("\t(NextTask)");
-	this->taskData.exeTask += 1;
-
-	if (this->isTask())
-	{
-		this->startTask();
-	}
-	else
-	{
-		this->stopTask();
-	}
-}
-void TaskManagement::addPin(String _n, int _p)
-{
-	Serial.print("add pin: ");
-	Serial.println(_n);
-
-	this->taskData.pins[_p] = _n;
-}
-void TaskManagement::removePin(String _n)
-{
-	for (int _i = 0; _i < sizeof(this->taskData.pins)/sizeof(String); _i += 1) {
-		if (this->taskData.pins[_i] == _n) {
-			this->taskData.pins[_i] = "";
-			break;
-		}
-	}
-}
-void TaskManagement::removePin(int _p) {
-	this->taskData.pins[_p] = "";
-}
 void TaskManagement::addTask(TASKTYPE _tp, String _id, char _mr, int _pwm, int _tm, bool _c)
 {
 	switch (_mr)
@@ -162,6 +162,81 @@ void TaskManagement::addTask(TASKTYPE _tp, String _id, char _mr, int _pwm, int _
 
 	taskData.setTask += 1;
 }
+void TaskManagement::startTask()
+{
+	Serial.println("\t(StartTask)");
+
+	String msg = String("\tLoop: ") + (this->taskData.exeLoopCount + 1) + String("/") + this->taskData.setLoopCount + String("\n\tTask Num: ") + (this->taskData.exeTask + 1) + String("/") + this->taskData.setTask;
+	Serial.println(msg);
+
+	this->taskData.tasks[this->taskData.exeLoopCount].start(this->timer, this->taskData.pins);
+}
+void TaskManagement::stopTask()
+{
+	Serial.println("\t(StopTask)");
+	this->taskData.tasks[this->taskData.exeLoopCount].stop(this->timer);
+}
+void TaskManagement::nextTask()
+{
+	Serial.println("\t(NextTask)");
+
+	this->stopTask();
+	this->taskData.exeTask += 1;
+
+	if (this->isTask()) this->startTask();
+}
+bool TaskManagement::isPin(int _r, int _p, String _i) {
+	for (int i = _p; i < _p + _r; i += 1) {
+		if (this->taskData.pins[i] != "" && this->taskData.pins[i] != _i) {
+			return false;
+		}
+	}
+
+	return true;
+}
+void TaskManagement::addPin(String _i, int _p)
+{
+	Serial.print("add pin: ");
+	Serial.println(_i);
+
+	int range = getCalcPinForModule(_i.charAt(0));
+
+	if (this->isPin(range, _p, _i)) {
+		this->removePin(_i);
+		for (int i = _p; i < _p + range; i += 1) {
+			this->taskData.pins[i] = _i;
+		}
+	}
+	else {
+		Serial.println("!!ERROR: Already in use");
+	}
+}
+void TaskManagement::clearPins() {
+	this->taskData.pins[PINLEN] = { "" };
+}
+void TaskManagement::removePin(String _id)
+{
+	for (int idx = 0; idx < PINLEN; idx += 1) {
+		if (this->taskData.pins[idx] == _id) {
+			this->taskData.pins[idx] = "";
+		}
+	}
+}
+void TaskManagement::removePin(int _p) {
+	this->taskData.pins[_p] = "";
+}
+int TaskManagement::getCalcPinForModule(char moduleID) {
+	switch (moduleID)
+	{
+	case 'm':
+	case 'M': return 2;
+	case 's':
+	case 'S': return 2;
+	case 't':
+	case 'T': return 4;
+	default: return 0;
+	}
+}
 void TaskManagement::setLoopCount(int _cnt)
 {
 	this->taskData.setLoopCount = _cnt;
@@ -175,7 +250,7 @@ void TaskManagement::printFormatTask(TaskData *_td)
 				 "setTask: " + _td->setTask + "\n";
 	
 	msg += "\n----------- Pins -----------\n";
-	for (int _i = 0; _i < sizeof(_td->pins)/sizeof(String); _i += 1) {
+	for (int _i = 0; _i < PINLEN; _i += 1) {
 		msg += "[" + String(_i)  + "]:" + _td->pins[_i] + "\n";
 	}
 	msg += "------------------------------\n\n";
@@ -243,14 +318,4 @@ int TaskManagement::getSetLoopCount()
 int TaskManagement::getExeLoopCount()
 {
 	return this->taskData.exeLoopCount;
-}
-// hidden methods
-void exeTaskDCMotor() {
-
-}
-void exeTaskStepMotor() {
-
-}
-void exeTaskScale() {
-	
 }

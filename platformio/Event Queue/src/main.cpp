@@ -97,7 +97,7 @@ void loop() {
 			int exeTime;
 
 			if (buf[1] == 'm' || buf[1] == 'M') {
-				tp = Motor;
+				tp = DC;
 
 				char _n[2] = { buf[2], buf[3] };
 				int n;
