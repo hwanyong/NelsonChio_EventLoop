@@ -27,6 +27,8 @@ void Task::setPins() {
 	break;
 	case Stepper:	this->exeStepMotor(); break;
 	case Scale:		this->exeScale(); break;
+	case None:
+	default: break;
 	}
 }
 void Task::getPinNumber(String pins[]) {
