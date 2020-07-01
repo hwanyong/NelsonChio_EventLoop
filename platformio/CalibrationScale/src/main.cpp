@@ -1,9 +1,20 @@
 #include <Arduino.h>
 
+#define PINBUTTON 21
+int btnState = 0;
+
 void setup() {
-  // put your setup code here, to run once:
+	Serial.begin(115200);
+	pinMode(PINBUTTON, INPUT);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+	btnState = digitalRead(PINBUTTON);
+
+	if (btnState == HIGH) {
+		Serial.println("HIGH");
+	}
+	else {
+		Serial.println("LOW");
+	}
 }
