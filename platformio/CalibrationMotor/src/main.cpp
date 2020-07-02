@@ -52,7 +52,7 @@ void loop() {
 			Serial.println("pwm,rotate count,total millis, step millis, amount, average");
 		}
 
-		float units = scale.get_units();
+		float units = scale.get_units();	// 10 : 1 seconds
 		currentMillis = millis();
 
 		if (units < 0) units = 0.0;
